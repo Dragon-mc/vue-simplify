@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app" v-show="true" title="" auto :title="title" class="a b c" :class="['d', {e: isShow}]" :style="{fontSize: 12}" style="color: red!important; background-color: #fff;">
+    <input type="text" v-model="lastName">
+    <div v-html="htmlText"></div>
+    <div v-text="text">
+      <div>balabala</div>
+      <div>hhhhhh</div>
+    </div>
+    <div>{{ comp1 }}</div>
+    <div>{{comp2}}</div>
+    <div>{{ firstName }} + {{ lastName }}</div>
+    <div id="diff" @click="handleClick">diff</div>
+    <div id="change">{{ variable }}  abc {{ var2 }}</div>
+    <div title="456" :title="123" v-for="(item, index) in list" :key="item">
+      {{ item }},{{ index }}
+      <div v-for="num in item">
+        {{ num }}
+      </div>
+    </div>
+    <span v-if="false">123</span>
+    <span v-else-if="false">456</span>
+    <span v-else>789</span>
+    <img src="" alt="">
+    普通文本
+  </div>
+</body>
+</html>
