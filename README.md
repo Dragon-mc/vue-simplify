@@ -1,5 +1,5 @@
 # vue-simplify
-a simple implementation fro vue.js
+a simple implementation for vue.js
 
 ## 关于实现内容
 ### 模板编译
