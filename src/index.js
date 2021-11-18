@@ -41,12 +41,20 @@ const vm = new Mvvm({
       console.log('hhh')
     },
     watchHandler(newV, oldV) {
+      this.title = 'new title'
       console.log(newV, oldV)
       console.log('deep change')
     },
   },
   watch: {
     deepObj: 'watchHandler',
+    title() {
+      this.variable = 'variable change'
+      console.log('title change')
+    },
+    variable() {
+      console.log('var change')
+    }
   },
 })
 

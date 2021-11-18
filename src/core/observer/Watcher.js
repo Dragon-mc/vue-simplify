@@ -39,6 +39,7 @@ export default class Watcher {
   }
 
   update() {
+    console.log('update:', this.uid)
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
