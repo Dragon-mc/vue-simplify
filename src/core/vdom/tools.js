@@ -15,8 +15,8 @@ export function replaceEle(newEle, oldEle) {
  * @param {Element} refer 
  * 将节点插入某个节点之前
  */
-export function insertBefore(newEle, refer) {
-  refer.parentNode.insertBefore(newEle, refer)
+export function insertBefore(newEle, refer, parent = null) {
+  (parent || refer.parentNode).insertBefore(newEle, refer)
 }
 
 /**

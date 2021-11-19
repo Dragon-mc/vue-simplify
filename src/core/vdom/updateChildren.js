@@ -24,7 +24,11 @@ export function updateChildren(oldVnode, newVnode) {
   
   // 只有当两个列表都没有扫描完的时候才继续遍历
   while (newStartIdx <= newEndIdx && oldStartIdx <= oldEndIdx) {
-    if (isSameNode(oldStartChild, newStartChild)) {
+    if (!oldStartChild) {
+      oldStartChild = oldVnode.children[++oldStartIdx]
+    } else if (!oldEndChild) {
+      oldEndChild = oldVnode.children[--oldEndIdx]
+    } else if (isSameNode(oldStartChild, newStartChild)) {
       // 新前旧前命中，无需替换，深度对比即可
       patch(oldStartChild, newStartChild)
       oldStartIdx++
@@ -59,17 +63,17 @@ export function updateChildren(oldVnode, newVnode) {
       if (!oldKeyMap) {
         // 第一次出现未命中，对map进行初始化，将旧前旧后之间的元素加入映射中
         for (let i = oldStartIdx; i <= oldEndIdx; i++) {
-          oldKeyMap[oldVnode.children[i].key] = oldVnode.children[i]
+          oldKeyMap[oldVnode.children[i].key] = i
         }
       }
       // 元素查找
       const findInOld = oldKeyMap[newStartChild.key]
-      if (findInOld) {
+      if (findInOld !== undefined && findInOld >= 0) {
+        const pre = oldVnode.children[findInOld]
         // 如果找到了元素，则进行元素调整，并比较（调整到旧前之前）
-        patch(findInOld, newStartChild)
-        insertBefore(findInOld.ele, oldStartChild.ele)
-        // 需要对找到的元素进行标记，说明已经比较过
-        findInOld._patched = true
+        patch(pre, newStartChild)
+        insertBefore(pre.ele, oldStartChild.ele)
+        oldVnode.children[pre] = undefined
         // 并且从映射map中删除
         delete oldKeyMap[newStartChild.key]
       } else {
@@ -84,9 +88,8 @@ export function updateChildren(oldVnode, newVnode) {
   // 如果新列表还有元素，说明是新插入的元素
   if (newStartIdx <= newEndIdx) {
     for (let i = newStartIdx; i <= newEndIdx; i++) {
-      // 插入到末尾即可
-      const existOld = oldStartChild || oldEndChild
-      existOld.ele.parentNode.appendChild(render(newVnode.children[i]))
+      const newEle = render(newVnode.children[i])
+      insertBefore(newEle, oldStartChild, (oldStartChild || oldEndChild).ele.parentNode)
     }
   }
   // 如果旧列表还有元素，说明是已经被删除的元素
@@ -94,7 +97,7 @@ export function updateChildren(oldVnode, newVnode) {
     for (let i = oldStartIdx; i <= oldEndIdx; i++) {
       const child = oldVnode.children[i]
       // 只移除没有被patch过的，即那些真正未被使用的
-      !child._patched && removeEle(child.ele)
+      child && removeEle(child.ele)
     }
   }
 }
